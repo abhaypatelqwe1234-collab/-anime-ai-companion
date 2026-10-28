@@ -1,0 +1,212 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#171326">
+  <title>Yuna — AI Companion</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: #100e19;
+      color: #f8f5ff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 480px;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      background: #171326;
+    }
+
+    header {
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid #302943;
+    }
+
+    .avatar {
+      width: 52px;
+      height: 52px;
+      display: grid;
+      place-items: center;
+      font-size: 29px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #f5a7df, #8b78f8);
+    }
+
+    header h1 { font-size: 18px; margin: 0; }
+    header p { margin: 4px 0 0; color: #b7abc9; font-size: 12px; }
+
+    .status { color: #78e5b1; }
+
+    .intro {
+      padding: 22px 18px;
+      text-align: center;
+      border-bottom: 1px solid #302943;
+    }
+
+    .intro .emoji { font-size: 48px; }
+    .intro h2 { margin: 8px 0; font-size: 22px; }
+    .intro p { margin: 0; color: #b7abc9; font-size: 14px; }
+
+    #chat {
+      flex: 1;
+      overflow-y: auto;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .message {
+      padding: 12px 15px;
+      max-width: 85%;
+      border-radius: 17px;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+    }
+
+    .bot {
+      align-self: flex-start;
+      background: #29233b;
+      border-bottom-left-radius: 5px;
+    }
+
+    .user {
+      align-self: flex-end;
+      background: #7957e8;
+      border-bottom-right-radius: 5px;
+    }
+
+    .composer {
+      display: flex;
+      gap: 8px;
+      padding: 13px;
+      border-top: 1px solid #302943;
+      padding-bottom: max(13px, env(safe-area-inset-bottom));
+    }
+
+    input {
+      min-width: 0;
+      flex: 1;
+      padding: 13px;
+      border-radius: 14px;
+      border: 1px solid #403651;
+      background: #211b30;
+      color: white;
+      font-size: 15px;
+      outline: none;
+    }
+
+    button {
+      border: 0;
+      border-radius: 14px;
+      padding: 0 17px;
+      color: white;
+      background: #8b68f5;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button:active { transform: scale(.96); }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <div class="avatar">🌸</div>
+      <div>
+        <h1>Yuna <span class="status">●</span></h1>
+        <p>Your AI companion · Demo mode</p>
+      </div>
+    </header>
+
+    <section class="intro">
+      <div class="emoji">🎀</div>
+      <h2>Meet Yuna</h2>
+      <p>A friendly anime companion, ready to chat.</p>
+    </section>
+
+    <section id="chat" aria-live="polite">
+      <div class="message bot">
+        Hi! 👋 Main Yuna hoon. Tum kaise ho? Aaj kya baat karein?
+      </div>
+    </section>
+
+    <form class="composer" id="chatForm">
+      <input
+        id="messageInput"
+        type="text"
+        placeholder="Message Yuna..."
+        autocomplete="off"
+        maxlength="1000"
+        required
+      >
+      <button type="submit">Send ➤</button>
+    </form>
+  </main>
+
+  <script>
+    const chat = document.getElementById("chat");
+    const form = document.getElementById("chatForm");
+    const input = document.getElementById("messageInput");
+
+    function addMessage(text, sender) {
+      const message = document.createElement("div");
+      message.className = "message " + sender;
+      message.textContent = text;
+      chat.appendChild(message);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function demoReply(text) {
+      const message = text.toLowerCase();
+
+      if (message.includes("hello") || message.includes("hi") ||
+          message.includes("hey")) {
+        return "Hii! 😊 Aaj tumhara din kaisa ja raha hai?";
+      }
+
+      if (message.includes("sad") || message.includes("dukhi") ||
+          message.includes("upset")) {
+        return "Aisa kya hua? Agar tum batana chaho, main sunne ke liye yahan hoon. 💜";
+      }
+
+      if (message.includes("study") || message.includes("padhai")) {
+        return "Chalo padhai ko chhote steps mein divide karte hain! 📚 Kis subject se shuru karein?";
+      }
+
+      return "Interesting! 😊 Thoda aur batao, main tumhari baat samajhna chahti hoon.";
+    }
+
+    form.addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const text = input.value.trim();
+      if (!text) return;
+
+      addMessage(text, "user");
+      input.value = "";
+
+      setTimeout(function() {
+        addMessage(demoReply(text), "bot");
+      }, 400);
+    });
+  </script>
+</body>
+</html>
+  
